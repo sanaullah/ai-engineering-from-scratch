@@ -16,7 +16,7 @@
 
 ## Le problème
 
-Le décodeur est lié à la mémoire. Sur un H100 exécutant Llama 3.3 70B FP8, chaque jeton décodé lit ~ 140 Go / s de poids et émet un jeton. Le calcul de la GPU est presque inactif pendant le décode.
+Le décodeur est lié à la mémoire. Sur un H100 exécutant Llama 3.3 70B FP8, chaque étape de décodeur lit tous les ~ 70 Go de poids de HBM et émet un jeton par séquence.
 
 Le décoding spéculatif exploite le fossé. Générez des jetons candidats K avec un modèle de projet bon marché, puis demandez au modèle cible de vérifier tous les K dans un seul passe à l'avant. Chaque jeton vérifié est effectivement gratuit (amortisé dans un lot de K à l'avant que la cible aurait dû faire de toute façon).
 
