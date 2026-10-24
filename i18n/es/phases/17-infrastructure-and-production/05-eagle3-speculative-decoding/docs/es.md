@@ -16,7 +16,7 @@
 
 ## El problema
 
-El decodificación es de memoria. En un H100 que ejecuta Llama 3.3 70B FP8, cada token decodificado lee ~140 GB / s de pesos y emite un token. El cálculo de la GPU es casi ocioso durante el decodificación.
+El decodificación es de memoria. En un H100 que ejecuta Llama 3.3 70B FP8, cada paso de decodificación lee todos los ~70 GB de pesos de HBM y emite un token por secuencia. El cálculo de la GPU es casi ocioso durante el decodificación.
 
 La descifrado especulativo explota la brecha. Generar tokens candidatos K con un modelo de borrador barato, luego pedir al modelo objetivo para verificar todos K en un solo pase hacia adelante. Cada token verificado es efectivamente libre (amortizado en un lote de K hacia adelante el objetivo habría tenido que hacer de todos modos).
 
