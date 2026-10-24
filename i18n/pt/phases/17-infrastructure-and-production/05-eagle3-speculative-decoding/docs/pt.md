@@ -16,7 +16,7 @@
 
 ## O problema
 
-O decodificador é limitado à memória. Em um H100 executando Llama 3.3 70B FP8, cada token decodificado lê ~ 140 GB / s de pesos e emite um token. O computador da GPU é quase ocioso durante o decodificação.
+O decodificador é ligado à memória. Em um H100 executando Llama 3.3 70B FP8, cada passo de decodificação lê todos os ~ 70 GB de pesos do HBM e emite um token por sequência. O computador da GPU é quase ocioso durante o decodificação.
 
 A descodificação especulativa explora a lacuna. Gerencie tokens candidatos K com um modelo de projeto barato, em seguida, peça ao modelo alvo para verificar todos os K em uma única passagem para a frente. Cada token verificado é efetivamente livre (amortizado em um lote de K para a frente o alvo teria que fazer de qualquer maneira).
 
