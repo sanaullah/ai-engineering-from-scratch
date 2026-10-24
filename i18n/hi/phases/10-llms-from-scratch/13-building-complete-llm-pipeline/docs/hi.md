@@ -9,7 +9,7 @@
 
 ## सीखने के लक्ष्य
 
-- 11 पूर्व पाठों (टोकनीज़र, डेटा, प्री-ट्रेनिंग, स्केलिंग, एसएफटी, आरएलएचएफ, डीपीओ, सीएआई, इवल, क्वांटिज़ेशन, इन्फेरेंस) को एक एकल पुनरावर्तन योग्य पाइपलाइन विनिर्देश में मिलाएं
+- 12 पूर्ववर्ती पाठों (दो टोकनटाइजर पाठ, डेटा, पूर्व-प्रशिक्षण, स्केलिंग, एसएफटी, आरएलएचएफ, डीपीओ, सीएआई, मूल्यांकन, क्वांटिज़ेशन, निष्कर्ष) को एक एकल पुनरावर्ती पाइपलाइन विनिर्देश में मिलाएं
 - चरणों के बीच कलाकृतियों के अनुबंध को परिभाषित करेंः प्रत्येक चरण क्या खपत करता है, यह क्या बनाता है, और अगला चरण इनपुट की पुष्टि कैसे करता है
 - एक ऑर्केस्ट्रेटर का निर्माण करें जो प्रयोगों को ट्रैक करता है, कलाकृतियों को हैश करता है, और मूल्यांकन सीमाओं पर निर्णयों को जहाज करता है
 - रोलबैक योजना का डिजाइन करेंः कौन सी कलाकृतियों को फिर से चलाया जाना सस्ता है, कौन सी महंगी हैं, और एक भ्रष्ट चेकपोस्ट की लागत क्या है
@@ -249,7 +249,7 @@ python code/main.py gate    # read manifest.out.yaml, apply eval gates, ship-or-
 | Manifest | "The recipe file" | YAML or JSON describing pipeline version, seed, per-stage config, and gate thresholds — sufficient to replay a run |
 | Content-addressed | "By hash not name" | Artifacts stored by SHA-256 of their contents, so you can never confuse version A with version B |
 | Eval gate | "The ship criteria" | Numeric thresholds on benchmark metrics and safety scores that must pass before an artifact is marked shippable |
-| KL budget | "How far alignment drifted" | A cap on cumulative KL(policy || reference) across alignment stages, enforced as a gate |
+| KL budget | "How far alignment drifted" | A cap on cumulative $\mathrm{KL}(\text{policy} \Vert \text{reference})$ across alignment stages, enforced as a gate |
 | MFU | "How much of the GPU you used" | Model FLOPs Utilization — achieved FLOPs divided by theoretical peak. 40% is typical at 70B scale, 55% at 7B |
 | Rollback plan | "What we do when it breaks" | Pre-written set of actions per stage on failure: re-run, fall back, retrain with revised inputs |
 | Orchestrator | "The conductor" | The process that reads the manifest, dispatches stages, verifies hashes, halts on any contract violation |

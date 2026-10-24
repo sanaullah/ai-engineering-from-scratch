@@ -53,8 +53,8 @@ For each drafted token x_t:
 
 यदि मसौदा मॉडल के टोकन स्तर पर स्वीकृति दर `α`, प्रति लक्ष्य-अग्रिम पास उत्पन्न होने वाले अपेक्षित टोकन निम्न हैंः
 
-```
-E[tokens] = (1 - α^{K+1}) / (1 - α)        # K = draft length, α in [0, 1]
+```math
+\mathbb{E}[\text{tokens}] = \frac{1 - \alpha^{K+1}}{1 - \alpha} \qquad K = \text{draft length}, \ \alpha \in [0, 1]
 ```
 
 `α = 0.8, K = 4``(1 - 0.8^5)/(1 - 0.8) = 3.36`प्रति अग्रिम टोकन। एक एकल लक्ष्य अग्रिम लागत लगभग `cost_q * K + cost_p`(के ड्राफ्ट स्टेप्स प्लस एक लक्ष्य सत्यापन) यदि `cost_p >> cost_q * K`गति अनुपात `3.36× / 1 = 3.36×`संचलन पर।
@@ -132,13 +132,13 @@ def speculative_step(p_target, q_draft, K, temperature=1.0):
     """One round of speculative decoding. Returns list of accepted tokens."""
     # 1. Draft K tokens
     draft_tokens = []
-    q_probs = []
+    q_dists = []
     state = draft_state_init()
     for _ in range(K):
         probs = softmax(q_draft(state) / temperature)
         t = np.random.choice(len(probs), p=probs)
         draft_tokens.append(t)
-        q_probs.append(probs[t])
+        q_dists.append(probs)
         state = draft_step(state, t)
 
     # 2. Target computes p at every drafted position + 1 extra
@@ -148,10 +148,10 @@ def speculative_step(p_target, q_draft, K, temperature=1.0):
     accepted = []
     for k, tok in enumerate(draft_tokens):
         r = np.random.uniform()
-        if r < p_probs_all[k][tok] / q_probs[k]:
+        if r < p_probs_all[k][tok] / q_dists[k][tok]:
             accepted.append(tok)
         else:
-            residual = np.maximum(p_probs_all[k] - q_probs[k], 0)
+            residual = np.maximum(p_probs_all[k] - q_dists[k], 0)
             residual /= residual.sum()
             accepted.append(np.random.choice(len(residual), p=residual))
             return accepted
@@ -175,7 +175,7 @@ def speculative_step(p_target, q_draft, K, temperature=1.0):
 
 1. सही अस्वीकृति नियम लागू करें और अनुभवजन्य रूप से इसकी पुष्टि करें।`speculative_decode`और सादे लक्ष्य नमूनाकरण के माध्यम से; दो आउटपुट वितरणों के बीच टीवी दूरी की गणना करें। < 0.01 होना चाहिए।
 
-2. गति सूत्र की गणना करें।`α`और `K`, प्रति लक्ष्य-आगे प्रति अपेक्षित टोकन का ग्राफ करें। α ∈ {0.5, 0.7, 0.9} के लिए इष्टतम K खोजें।
+2. गति सूत्र की गणना करें।`α`और `K`, प्रति लक्ष्य आगे के लिए अपेक्षित टोकन का ग्राफ। इष्टतम खोजें $K$के लिए$\alpha \in \lbrace 0.5, 0.7, 0.9 \rbrace$. .
 
 3. एक छोटे से ड्राफ्ट को प्रशिक्षित करें, 124M GPT-2 लक्ष्य ले लो और KL हानि के साथ 100M टोकन पर 30M GPT-2 ड्राफ्ट को डिस्टिल करें।`α`अपेक्षितः 0.6-0.7.
 
