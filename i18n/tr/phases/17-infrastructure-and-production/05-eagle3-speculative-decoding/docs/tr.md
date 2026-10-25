@@ -16,7 +16,7 @@
 
 ## Sorun
 
-Dekode hafıza bağlıdır. Llama 3.3 70B FP8 çalışan bir H100'de, her dekode edilmiş token ~ 140 GB / s ağırlık okuyor ve bir token yayar. GPU hesaplama dekode sırasında neredeyse boştur.
+H100'de Llama 3.3 70B FP8 çalıştırılan bir H100'de, her dekode adımı HBM'den tüm ~70 GB ağırlıkları okur ve her diziye bir token gönderir. GPU hesaplama dekode sırasında neredeyse boştur.
 
 Speküel dekodlama boşluğu kullanır. K aday tokenlerini ucuz bir taslak modeli ile oluşturun, sonra hedef modelden tüm K'yi tek bir ileri geçitle doğrulamalarını isteyin. Her doğrulanmış token etkin olarak ücretsizdir (hedef her şekilde yapmalıydı).
 
