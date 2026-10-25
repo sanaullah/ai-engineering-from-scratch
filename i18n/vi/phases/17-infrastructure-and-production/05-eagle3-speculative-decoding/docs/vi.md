@@ -16,7 +16,7 @@
 
 ## Vấn đề
 
-Decode là kết nối bộ nhớ. trên một H100 chạy Llama 3.3 70B FP8, mỗi token được giải mã đọc ~ 140 GB / s trọng lượng và phát ra một token.
+Decode là kết nối bộ nhớ. trên một H100 chạy Llama 3.3 70B FP8, mỗi bước decode đọc tất cả ~ 70 GB trọng lượng từ HBM và phát ra một token mỗi chuỗi.
 
 Việc giải mã giả định khai thác khoảng cách. Tạo các mã thông báo ứng cử viên K với mô hình dự thảo rẻ tiền, sau đó yêu cầu mô hình mục tiêu xác minh tất cả K trong một lần đi trước. Mỗi mã thông báo được xác minh thực sự miễn phí (được rút tiền thành một loạt các mã thông báo K mà mục tiêu đã phải làm bất cứ lúc nào).
 
